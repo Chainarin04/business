@@ -1,31 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ดูข้อมูลselect1.php</title>
+    <title>Customer List (Select1)</title>
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #eef2f3;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        table {
+            width: 800px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+        }
+
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            color: #555;
+        }
+
+        tr:hover {
+            background-color: #d6eaf8;
+            transition: 0.3s;
+        }
+    </style>
 </head>
 
 <body>
+    <h1>รายชื่อลูกค้า (Select 1 - Foreach Loop)</h1>
     <?php
     require 'connect.php';
-    // ทดสอบเรียกดูข้อมูลจากฐานข้อมูล แบบ Loop พร้อมดึงชื่อประเทศ (Exercise)
-    $sql = 'SELECT customer.*, country.CountryName 
+    // ใช้ JOIN เพื่อโชว์ชื่อประเทศภาษาไทย (ตามโจทย์ Exercise)
+    $sql = "SELECT customer.*, country.CountryName 
             FROM customer 
-            JOIN country ON customer.CountryCode = country.CountryCode';
+            JOIN country ON customer.CountryCode = country.CountryCode";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
-    echo '<br/>';
-
-    $result = $stmt->fetchAll();
-
-    foreach ($result as $r) {
-        // ปรับให้โชว์ รหัส--ชื่อ--ยอดหนี้--ชื่อประเทศ ตาม Exercise
-        print $r['CustomerID'] . '--' . $r['Name'] . '--' . $r['OutstandingDebt'] . '--' . $r['CountryName'] . '<br>';
-    }
+    $result = $stmt->fetchAll(); // ดึงข้อมูลทั้งหมดมาเก็บไว้ก่อน
     ?>
+
+    <table>
+        <tr>
+            <th>รหัสลูกค้า</th>
+            <th>ชื่อ - นามสกุล</th>
+            <th>วันเกิด</th>
+            <th>อีเมล</th>
+            <th>ประเทศ</th>
+            <th>ยอดหนี้</th>
+        </tr>
+
+        <?php foreach ($result as $r) { ?>
+            <tr>
+                <td><?= $r['CustomerID'] ?></td>
+                <td><?= $r['Name'] ?></td>
+                <td><?= $r['Birthdate'] ?></td>
+                <td><?= $r['Email'] ?></td>
+                <td><?= $r['CountryName'] ?></td>
+                <td><?= $r['OutstandingDebt'] ?></td>
+            </tr>
+        <?php } ?>
+    </table>
 </body>
 
 </html>
