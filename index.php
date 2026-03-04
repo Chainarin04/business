@@ -26,6 +26,35 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
+        /* เมนูนำทาง (Navigation) */
+        .nav-menu {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #555;
+            font-weight: bold;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 25px;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .nav-menu a:hover {
+            background-color: #e0f2f1;
+            color: #009688;
+        }
+
+        .nav-menu a.active {
+            background-color: #3498db;
+            color: white;
+        }
+
         h2 {
             text-align: center;
             color: #2c3e50;
@@ -70,7 +99,6 @@
         /* จัดรูปแบบป้ายสถานะหนี้ */
         .debt-badge {
             background-color: #e74c3c;
-            /* สีแดงสำหรับคนมีหนี้ */
             color: white;
             padding: 6px 12px;
             border-radius: 20px;
@@ -81,7 +109,6 @@
 
         .no-debt {
             background-color: #2ecc71;
-            /* สีเขียวสำหรับคนไม่มีหนี้ */
         }
     </style>
 </head>
@@ -89,6 +116,13 @@
 <body>
 
     <div class="container">
+        <div class="nav-menu">
+            <a href="index.php" class="active">🏠 หน้าแรก</a>
+            <a href="select1.php">🔍 รายชื่อลูกค้า (ดูรายละเอียด)</a>
+            <a href="addcountry.php">🌎 เพิ่มข้อมูลประเทศ</a>
+            <a href="addcustomer.php">👤 เพิ่มข้อมูลลูกค้า</a>
+        </div>
+
         <div class="header-wrapper">
             <h2>📋 ข้อมูลลูกค้า (Customer Information)</h2>
         </div>
@@ -107,10 +141,8 @@
             <tbody>
                 <?php
                 try {
-                    // เรียกไฟล์เชื่อมต่อฐานข้อมูล
                     require 'connect.php';
 
-                    // ใช้ JOIN ใน SQL เพื่อนำชื่อประเทศจากตาราง country มาแสดงแทน CountryCode
                     $sql = "SELECT c.CustomerID, c.Name, c.Birthdate, c.Email, co.CountryName, c.OutstandingDebt 
                             FROM customer c 
                             JOIN country co ON c.CountryCode = co.CountryCode";
@@ -118,9 +150,7 @@
                     $stmt = $conn->prepare($sql);
                     $stmt->execute();
 
-                    // ลูปข้อมูลมาแสดงแบบ PDO::FETCH_ASSOC
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        // เช็คยอดหนี้เพื่อเปลี่ยนสีป้าย (Badge)
                         $debtClass = ($row['OutstandingDebt'] > 0) ? 'debt-badge' : 'debt-badge no-debt';
 
                         echo "<tr>";
@@ -129,7 +159,6 @@
                         echo "<td>" . htmlspecialchars($row['Birthdate']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['Email']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['CountryName']) . "</td>";
-                        // แปลงตัวเลขให้มีคอมม่าและทศนิยม 2 ตำแหน่ง
                         echo "<td><span class='$debtClass'>" . number_format($row['OutstandingDebt'], 2) . " ฿</span></td>";
                         echo "</tr>";
                     }
