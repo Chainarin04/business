@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบจัดการข้อมูลลูกค้า (Customer Information)</title>
     <style>
-        /* จัดรูปแบบพื้นหลังและฟอนต์ */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
@@ -16,9 +15,9 @@
             padding: 40px 20px;
         }
 
-        /* จัดรูปแบบกล่องเนื้อหาตรงกลาง */
+
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             background: #ffffff;
             padding: 30px;
@@ -26,7 +25,6 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
-        /* เมนูนำทาง (Navigation) */
         .nav-menu {
             text-align: center;
             margin-bottom: 30px;
@@ -68,7 +66,6 @@
             text-align: center;
         }
 
-        /* จัดรูปแบบตาราง */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -90,13 +87,12 @@
             letter-spacing: 0.5px;
         }
 
-        /* เอฟเฟกต์ตอนชี้เมาส์ที่แถว */
         tr:hover {
             background-color: #f1f9ff;
             transition: background-color 0.3s ease;
         }
 
-        /* จัดรูปแบบป้ายสถานะหนี้ */
+
         .debt-badge {
             background-color: #e74c3c;
             color: white;
@@ -109,6 +105,38 @@
 
         .no-debt {
             background-color: #2ecc71;
+        }
+
+
+        .btn-edit {
+            background-color: #f39c12;
+            color: white;
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn-edit:hover {
+            background-color: #e67e22;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-left: 5px;
+            transition: 0.2s;
+        }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
         }
     </style>
 </head>
@@ -136,6 +164,7 @@
                     <th>อีเมล</th>
                     <th>ประเทศ</th>
                     <th>ยอดหนี้สะสม</th>
+                    <th style="text-align: center;">จัดการ</th>
                 </tr>
             </thead>
             <tbody>
@@ -160,10 +189,16 @@
                         echo "<td>" . htmlspecialchars($row['Email']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['CountryName']) . "</td>";
                         echo "<td><span class='$debtClass'>" . number_format($row['OutstandingDebt'], 2) . " ฿</span></td>";
+
+                        echo "<td style='text-align: center;'>";
+                        echo "<a href='updatecustomer.php?CustomerID=" . urlencode($row['CustomerID']) . "' class='btn-edit'>✏️ แก้ไข</a>";
+                        echo "<a href='deletecustomer.php?CustomerID=" . urlencode($row['CustomerID']) . "' class='btn-delete' onclick='return confirm(\"ยืนยันการลบข้อมูลของ: " . htmlspecialchars($row['Name']) . " หรือไม่?\")'>🗑️ ลบ</a>";
+                        echo "</td>";
+
                         echo "</tr>";
                     }
                 } catch (PDOException $e) {
-                    echo "<tr><td colspan='6' style='text-align:center; color:red;'>ไม่สามารถประมวลผลข้อมูลได้ : " . $e->getMessage() . "</td></tr>";
+                    echo "<tr><td colspan='7' style='text-align:center; color:red;'>ไม่สามารถประมวลผลข้อมูลได้ : " . $e->getMessage() . "</td></tr>";
                 }
                 $conn = null;
                 ?>

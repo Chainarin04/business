@@ -73,11 +73,11 @@
         <?php
         require 'connect.php';
 
-        // รับค่า CustomerID ที่ส่งมาจากหน้าหลัก
+
         if (isset($_GET['CustomerID'])) {
             $id = $_GET['CustomerID'];
 
-            // ดึงข้อมูลเฉพาะลูกค้ารายนี้
+
             $sql = "SELECT * FROM customer WHERE CustomerID = ?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$id]);
